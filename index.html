@@ -1,6 +1,6 @@
 <title>Beauty of Eve Skin Quiz</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Answer 4 quick questions and get a treatment suggestion from Beauty of Eve Skincare, Midtown Toronto. Free consultations.">
+<meta name="description" content="Answer 5 quick questions and get a treatment suggestion from Beauty of Eve Skincare, Midtown Toronto. Free consultations.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;1,6..96,500&family=Figtree:wght@400;500;600&display=swap">
@@ -98,6 +98,9 @@ p{margin:0; max-width:62ch}
 .deal{background:var(--accent-soft); border-radius:12px; padding:12px 14px; font-weight:600; display:flex; flex-direction:column; gap:2px}
 .deal .lbl{font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:600}
 .deal-inline{display:block; margin-top:4px; color:var(--accent); font-weight:600}
+.intro-deals{border:1px solid var(--line); background:var(--surface); border-radius:14px; padding:14px 16px; display:flex; flex-direction:column; gap:6px}
+.intro-deals .lbl{font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:600}
+.intro-deals ul{margin:0; padding-left:18px; display:flex; flex-direction:column; gap:4px}
 .cta{display:flex; flex-direction:column; gap:12px}
 .cta .sub{font-size:.9rem; color:var(--muted); text-align:center}
 .contact{display:grid; grid-template-columns:1fr 1fr; gap:10px}
@@ -125,13 +128,14 @@ footer{font-size:.82rem; color:var(--muted); border-top:1px solid var(--line); p
     <section class="screen intro" id="intro">
       <div class="eyebrow">1-minute skin quiz</div>
       <h1>Find the treatment that fits your <em>skin goals</em></h1>
-      <p class="lede">Answer four quick questions about what you'd like to change. We'll suggest the treatment that suits you best, then you can book a free consultation to talk it through with our team.</p>
+      <p class="lede">Answer five quick questions about your face, skin, body or hair goals. We'll suggest the treatment that suits you best, then you can book a free consultation to talk it through with our team.</p>
       <ul class="facts">
-        <li>4 questions</li>
+        <li>5 questions</li>
         <li>No sign-up</li>
         <li>Free consultation</li>
       </ul>
       <div><button class="btn" id="start" type="button">Start the quiz</button></div>
+      <div class="intro-deals" id="intro-deals" hidden></div>
     </section>
   </main>
 
@@ -144,70 +148,129 @@ footer{font-size:.82rem; color:var(--muted); border-top:1px solid var(--line); p
 <script>
 const BOOK = "https://api.leadconnectorhq.com/booking/czGzkv8ishgckZ1E3NQI/bp/OeCEj3SpPd3R7EbvkFXk";
 
+/* dt = downtime (0 none, 1 a day or two, 2 a few days); st = strength of change (1 subtle, 2 noticeable, 3 strongest); sp = results quick or build over time; g = gentle */
 const T = {
-  hifu:   {name:"HIFU Face & Neck Lift", about:"A non-surgical treatment that tightens skin by stimulating your own collagen, for a gradual lift through the face, jaw and neck."},
-  thread: {name:"Thread Lift", about:"A visible lift without surgery. Dissolvable threads lift and define the cheeks and jawline with minimal downtime."},
-  filler: {name:"Dermal Fillers", about:"Juvéderm or Radiesse Plus restore lost volume and soften lines, for a refreshed look that still looks like you."},
-  lip:    {name:"Lip Filler", about:"Subtle, natural-looking volume and shape for lips that feel balanced with the rest of your face."},
-  body:   {name:"Body & Butt Filler", about:"Non-surgical volume to refine body contour, shape and proportions."},
-  rf:     {name:"RF Microneedling", about:"Microneedling with radiofrequency energy for smoother, firmer, healthier-looking skin and refined texture."},
-  laser:  {name:"Fractional Laser", about:"Resurfaces the skin and boosts collagen to improve pigmentation, uneven tone, acne scars and texture."},
-  hydra:  {name:"Hydra Facial + Contouring", about:"A deep-cleansing, hydrating facial that brings back glow, with contouring for a lifted, fresh finish."},
-  exo:    {name:"Exosome Therapy", about:"Supports scalp health and hair follicles for people noticing thinning or shedding hair."},
-  lhr:    {name:"Laser Hair Removal", about:"Long-term reduction of unwanted hair, with sessions planned around your skin and hair type."}
+  botox:    {name:"Anti-Wrinkle Injections (Botox)", about:"Relaxes the muscles behind forehead lines, frown lines and crow's feet to soften them and help prevent new ones.", dt:0, st:2, sp:"quick", g:false},
+  filler:   {name:"Dermal Fillers", about:"Juvéderm or Radiesse Plus restore volume and contour the cheeks, chin and jawline, for a refreshed look that still looks like you.", dt:1, st:2, sp:"quick", g:false},
+  lip:      {name:"Lip Filler", about:"Natural-looking volume, shape and hydration for lips that feel balanced with the rest of your face.", dt:1, st:2, sp:"quick", g:false},
+  hifu:     {name:"HIFU Face Lift", about:"Focused ultrasound lifts and tightens the deeper layers of the face, jawline and neck without surgery.", dt:0, st:1, sp:"build", g:false},
+  thread:   {name:"Thread Lift", about:"Lifts sagging cheeks and jowls without surgery, with minimal downtime.", dt:1, st:3, sp:"quick", g:false},
+  endolift: {name:"Endolift", about:"A minimally invasive laser that tightens skin, stimulates collagen and reduces small areas of fat.", dt:1, st:3, sp:"build", g:false},
+  rf:       {name:"RF Microneedling", about:"Microneedling with radiofrequency to improve acne scars, pores and firmness.", dt:1, st:2, sp:"build", g:false},
+  micro:    {name:"Microneedling", about:"Controlled micro-channels boost collagen to refine scars, texture and fine lines.", dt:1, st:1, sp:"build", g:false},
+  laser:    {name:"Fractional Laser", about:"Renews skin one microscopic area at a time to improve texture, tone and scars.", dt:2, st:3, sp:"build", g:false},
+  subcision:{name:"Subcision", about:"Releases the tethered scar tissue under depressed acne scars so the skin can sit smoother.", dt:1, st:2, sp:"build", g:false},
+  pigment:  {name:"Hyperpigmentation Treatment", about:"Targets dark spots and uneven tone for a clearer, more even complexion.", dt:1, st:2, sp:"build", g:false},
+  vascular: {name:"Vascular Lesion Treatment", about:"Treats visible blood vessels and redness on the face and body.", dt:0, st:2, sp:"build", g:false},
+  booster:  {name:"Skin Booster", about:"Deep hydration that revitalizes the skin and improves texture and radiance.", dt:0, st:1, sp:"build", g:true},
+  salmon:   {name:"Salmon DNA (Polynucleotides)", about:"Injectable polynucleotides that improve hydration, elasticity and overall skin quality.", dt:0, st:1, sp:"build", g:false},
+  hydra:    {name:"Hydra Facial + Contouring", about:"A deep-cleansing, hydrating facial that brings back glow, with contouring for a lifted, fresh finish.", dt:0, st:1, sp:"quick", g:true},
+  fatdis:   {name:"Fat Dissolving Injections", about:"Breaks down stubborn pockets of fat in targeted areas such as under the chin.", dt:1, st:2, sp:"build", g:false},
+  skintag:  {name:"Skin Tag Removal", about:"Quick removal of benign skin tags.", dt:0, st:3, sp:"quick", g:false},
+  body:     {name:"Body & Butt Filler", about:"Non-surgical volume to refine body contour, shape and proportions.", dt:1, st:3, sp:"quick", g:false},
+  contour:  {name:"Body Contouring", about:"Reduces fat and improves skin tone in targeted body areas, no surgery needed.", dt:0, st:2, sp:"build", g:true},
+  cellulite:{name:"Cellulite Reduction", about:"Smooths and firms skin where cellulite shows.", dt:0, st:1, sp:"build", g:true},
+  stretch:  {name:"Stretch Mark Reduction", about:"Improves how stretch marks look by renewing texture and stimulating regeneration.", dt:1, st:2, sp:"build", g:false},
+  bodyfirm: {name:"Body Skin Firming", about:"Tightens and tones loose skin on the body.", dt:0, st:1, sp:"build", g:true},
+  vaginal:  {name:"Vaginal Tightening", about:"A non-surgical treatment for tone, elasticity and comfort.", dt:0, st:2, sp:"build", g:true},
+  lhr:      {name:"Laser Hair Removal", about:"Long-term hair reduction for women and men, planned around your skin and hair type.", dt:0, st:2, sp:"build", g:false},
+  exo:      {name:"Exosome Therapy", about:"A regenerative treatment that supports scalp health and hair growth.", dt:0, st:1, sp:"build", g:true},
+  prp:      {name:"PRP Hair Treatment", about:"Uses your own platelet-rich plasma to support hair follicles and thinning hair.", dt:0, st:1, sp:"build", g:false},
+  iv:       {name:"IV Therapy", about:"Vitamins and nutrients delivered directly into the bloodstream for hydration, energy and wellness.", dt:0, st:1, sp:"quick", g:true}
 };
 
-const Q = [
-  {id:"concern", q:"What would you most like to change?", hint:"Pick the one that matters most right now.", opts:[
-    {t:"Sagging or loose skin", s:"Face, jawline or neck", pool:["hifu","thread","rf"], pts:{hifu:3,thread:3,rf:1}, why:"You want firmer, lifted skin"},
-    {t:"Lost volume, hollows or lines", s:"Cheeks, under-eyes, smile lines", pool:["filler","hifu","thread"], pts:{filler:4,hifu:1,thread:1}, why:"You want to restore volume and soften lines"},
-    {t:"Fuller or more defined lips", s:"", pool:["lip","filler"], pts:{lip:5}, why:"You want more lip volume or shape"},
-    {t:"Acne scars, dark spots or uneven texture", s:"", pool:["laser","rf","hydra"], pts:{laser:3,rf:3}, why:"You want smoother, more even-toned skin"},
-    {t:"Dull or tired-looking skin", s:"", pool:["hydra","rf","laser"], pts:{hydra:4,rf:1}, why:"You want your glow back"},
-    {t:"Body or buttock shape", s:"", pool:["body"], pts:{body:5}, why:"You want to refine your body contour"},
-    {t:"Thinning hair", s:"", pool:["exo"], pts:{exo:5}, why:"You want to support thinning hair"},
-    {t:"Unwanted body or facial hair", s:"", pool:["lhr"], pts:{lhr:5}, why:"You want long-term hair reduction"}
+/* pool: treatments that suit this concern, most relevant first */
+const AREAS = [
+  {t:"Face & skin", s:"Lines, lifting, volume, lips, scars, tone, glow", concerns:[
+    {t:"Wrinkles and fine lines", pool:["botox","filler","rf","salmon"], why:"You want to soften wrinkles and fine lines"},
+    {t:"Sagging or loose skin", s:"Cheeks, jowls, jawline, neck", pool:["hifu","thread","endolift","rf"], why:"You want firmer, lifted skin"},
+    {t:"Lost volume or hollows", s:"Cheeks, chin, under-eyes", pool:["filler","salmon","thread"], why:"You want to restore volume and contour"},
+    {t:"Fuller or more defined lips", pool:["lip"], also:"filler", why:"You want more lip volume or shape"},
+    {t:"Acne scars, large pores or rough texture", pool:["rf","subcision","laser","micro"], why:"You want smoother skin and softer scars"},
+    {t:"Dark spots or uneven tone", pool:["pigment","laser","hydra"], why:"You want a more even skin tone"},
+    {t:"Redness or visible veins", pool:["vascular"], also:"hydra", why:"You want to calm redness and visible vessels"},
+    {t:"Dull, dry or tired-looking skin", pool:["hydra","booster","salmon"], why:"You want your glow and hydration back"},
+    {t:"Double chin or a softer jawline", pool:["fatdis","endolift","hifu"], why:"You want a sharper chin and jawline"},
+    {t:"Skin tags", pool:["skintag"], also:"hydra", why:"You want skin tags removed"}
   ]},
-  {id:"change", q:"How much of a change are you looking for?", hint:"There's no wrong answer. Your consultation will fine-tune this.", opts:[
-    {t:"Subtle and natural", s:"People notice you look rested, not 'done'", pts:{hydra:2,hifu:2,lip:1,rf:1}, why:"You prefer a subtle, natural result"},
-    {t:"A clear, noticeable difference", s:"", pts:{filler:2,rf:2,laser:2,lip:1,body:1}, why:"You want a clear, visible difference"},
-    {t:"The most lift or change possible without surgery", s:"", pts:{thread:3,filler:2,body:2,laser:1}, why:"You want the strongest non-surgical result"}
+  {t:"Body", s:"Shape, fat, cellulite, stretch marks, hair removal", concerns:[
+    {t:"Stubborn fat or body shape", pool:["contour","fatdis","endolift"], why:"You want to reduce stubborn fat and reshape"},
+    {t:"More volume in the buttocks or body", pool:["body"], also:"contour", why:"You want more volume and shape"},
+    {t:"Cellulite", pool:["cellulite","bodyfirm"], why:"You want smoother-looking skin"},
+    {t:"Stretch marks", pool:["stretch","bodyfirm"], why:"You want stretch marks to look softer"},
+    {t:"Loose skin on the body", pool:["bodyfirm","endolift"], why:"You want tighter, firmer body skin"},
+    {t:"Unwanted hair", pool:["lhr"], why:"You want long-term hair reduction"},
+    {t:"Intimate wellness", s:"Tone, elasticity and comfort", pool:["vaginal"], why:"You want to improve intimate tone and comfort"}
   ]},
-  {id:"downtime", q:"How much downtime can you plan for?", hint:"Downtime is time with redness or swelling before you're fully back to normal.", opts:[
-    {t:"None, I need to look normal right away", s:"", pts:{hydra:3,hifu:2,lhr:1,exo:1}, why:"You need little to no downtime"},
-    {t:"A day or two is fine", s:"", pts:{filler:2,lip:2,rf:2,thread:1,body:1}, why:"A day or two of downtime works for you"},
-    {t:"A few days is fine for better results", s:"", pts:{laser:3,rf:2,thread:2}, why:"You're open to a few days of downtime for stronger results"}
+  {t:"Hair & scalp", s:"Thinning, shedding, scalp health", concerns:[
+    {t:"Thinning or shedding hair", pool:["prp","exo"], why:"You want to support thinning hair"},
+    {t:"A receding hairline or thin patches", pool:["prp","exo"], why:"You want to support areas where hair is thinning"},
+    {t:"Scalp health", pool:["exo","prp"], why:"You want a healthier scalp"}
   ]},
-  {id:"priority", q:"What matters most to you?", hint:"", opts:[
-    {t:"Results I can see quickly", s:"", pts:{filler:2,lip:2,body:2,hydra:1,thread:1}, why:"You'd like to see results quickly"},
-    {t:"Results that build and last", s:"", pts:{hifu:2,rf:2,laser:2,thread:1,lhr:1,exo:1}, why:"You'd like results that build and last"},
-    {t:"Keeping it gentle and comfortable", s:"", pts:{hydra:3,hifu:1,exo:1}, why:"Comfort matters to you"}
+  {t:"Wellness & energy", s:"Hydration, energy, glow from within", concerns:[
+    {t:"Low energy or feeling run down", pool:["iv"], also:"hydra", why:"You want to feel more energized"},
+    {t:"Hydration and recovery", pool:["iv"], also:"booster", why:"You want better hydration and recovery"},
+    {t:"A glow from the inside out", pool:["iv","hydra"], why:"You want your skin and body to glow"}
   ]}
 ];
+
+const LATER = [
+  {id:"change", q:"How much of a change are you looking for?", hint:"There's no wrong answer. Your consultation will fine-tune this.", opts:[
+    {t:"Subtle and natural", s:"People notice you look rested, not 'done'", fit:x=>x.st===1?2:x.st===2?1:0, why:"You prefer a subtle, natural result"},
+    {t:"A clear, noticeable difference", fit:x=>x.st===2?2:x.st===3?1:0, why:"You want a clear, visible difference"},
+    {t:"The most change possible without surgery", fit:x=>x.st===3?2:x.st===2?1:0, why:"You want the strongest non-surgical result"}
+  ]},
+  {id:"downtime", q:"How much downtime can you plan for?", hint:"Downtime is time with redness or swelling before you're fully back to normal.", opts:[
+    {t:"None, I need to look normal right away", fit:x=>x.dt===0?2:x.dt===2?-2:0, why:"You need little to no downtime"},
+    {t:"A day or two is fine", fit:x=>x.dt<=1?1:0, why:"A day or two of downtime works for you"},
+    {t:"A few days is fine for better results", fit:x=>x.dt>=1?1:0, why:"You're open to a few days of downtime for stronger results"}
+  ]},
+  {id:"priority", q:"What matters most to you?", hint:"", opts:[
+    {t:"Results I can see quickly", fit:x=>x.sp==="quick"?2:0, why:"You'd like to see results quickly"},
+    {t:"Results that build and last", fit:x=>x.sp==="build"?2:0, why:"You'd like results that build and last"},
+    {t:"Keeping it gentle and comfortable", fit:x=>x.g?2:0, why:"Comfort matters to you"}
+  ]}
+];
+const TOTAL = 2 + LATER.length;
 
 let DEALS = {headline:"", deals:[]};
 (function loadDeals(){
   const now = new Date();
   const ym = now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
   fetch("deals.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{
-    if(d && d.month===ym && Array.isArray(d.deals)) DEALS = {headline:d.headline||"", deals:d.deals.filter(x=>x && T[x.treatment] && x.text)};
+    if(d && d.month===ym && Array.isArray(d.deals)){
+      DEALS = {headline:d.headline||"", deals:d.deals.filter(x=>x && x.text && (!x.treatment || T[x.treatment]))};
+      showIntroDeals();
+    }
   }).catch(()=>{});
 })();
 function dealFor(k){ const d = DEALS.deals.find(x=>x.treatment===k); return d ? d.text : ""; }
+function showIntroDeals(){
+  const box = document.getElementById("intro-deals");
+  if(!box || !DEALS.deals.length) return;
+  box.innerHTML = `<div class="lbl">${esc(DEALS.headline || "This month's deals")}</div><ul>${DEALS.deals.map(d=>`<li>${d.treatment?`<strong>${esc(T[d.treatment].name)}</strong> · `:""}${esc(d.text)}</li>`).join("")}</ul>`;
+  box.hidden = false;
+}
 
 const app = document.getElementById("app");
 let step = 0;
-const answers = [];
+const answers = []; /* [areaIndex, concernIndex, change, downtime, priority] */
 
-function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+function current(){
+  if(step===0) return {id:"area", q:"Which area would you like to focus on?", hint:"Choose one. You can always ask about the others at your consultation.", opts:AREAS};
+  if(step===1) return {id:"concern", q:"What would you most like to change?", hint:"Pick the one that matters most right now.", opts:AREAS[answers[0]].concerns};
+  return LATER[step-2];
+}
 
 function renderQuestion(){
-  const item = Q[step];
-  const pct = Math.round((step)/Q.length*100);
+  const item = current();
+  const pct = Math.round(step/TOTAL*100);
   app.innerHTML = `
   <section class="screen question">
     <div class="progress">
-      <div class="progress-row"><span>Question ${step+1} of ${Q.length}</span><span>${pct}%</span></div>
+      <div class="progress-row"><span>Question ${step+1} of ${TOTAL}</span><span>${pct}%</span></div>
       <div class="bar"><span style="width:${pct}%"></span></div>
     </div>
     <h2>${esc(item.q)}</h2>
@@ -218,9 +281,11 @@ function renderQuestion(){
     <div class="nav">${step>0?`<button class="link" type="button" id="back">← Back</button>`:`<span></span>`}<span></span></div>
   </section>`;
   app.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
-    answers[step] = +b.dataset.i;
+    const i = +b.dataset.i;
+    if(step===0 && answers[0]!==i) answers.length = 0;
+    answers[step] = i;
     b.setAttribute("aria-pressed","true");
-    setTimeout(()=>{ step++; step<Q.length?renderQuestion():renderResult(); window.scrollTo({top:0,behavior:"smooth"}); },160);
+    setTimeout(()=>{ step++; step<TOTAL?renderQuestion():renderResult(); window.scrollTo({top:0,behavior:"smooth"}); },160);
   }));
   const back = document.getElementById("back");
   if(back) back.addEventListener("click",()=>{step--; renderQuestion();});
@@ -228,23 +293,19 @@ function renderQuestion(){
 }
 
 function score(){
-  const concern = Q[0].opts[answers[0]];
-  const s = {};
-  concern.pool.forEach(k=>s[k]=0);
-  Q.forEach((item,qi)=>{
-    const pts = item.opts[answers[qi]].pts;
-    for(const k in pts) if(k in s) s[k]+=pts[k];
-  });
-  const ranked = Object.keys(s).sort((a,b)=>s[b]-s[a] || concern.pool.indexOf(a)-concern.pool.indexOf(b));
-  const pairing = {body:"hydra", exo:"hydra", lhr:"hydra", lip:"filler"};
-  let second = ranked[1] || pairing[ranked[0]];
-  return {top:ranked[0], second};
+  const concern = AREAS[answers[0]].concerns[answers[1]];
+  const ranked = concern.pool.map((k,idx)=>{
+    let s = idx===0?4:idx===1?2:1;
+    LATER.forEach((item,li)=>{ s += item.opts[answers[li+2]].fit(T[k]); });
+    return {k,s,idx};
+  }).sort((a,b)=>b.s-a.s || a.idx-b.idx).map(x=>x.k);
+  return {concern, top:ranked[0], second: ranked[1] || concern.also || ""};
 }
 
 function renderResult(){
-  const {top, second} = score();
+  const {concern, top, second} = score();
   const t = T[top];
-  const reasons = Q.map((item,qi)=>item.opts[answers[qi]].why);
+  const reasons = [concern.why, ...LATER.map((item,li)=>item.opts[answers[li+2]].why)];
   const secondDeal = second ? dealFor(second) : "";
   const secondLine = second && second!==top
     ? `<div class="also">Also worth asking about: <strong>${esc(T[second].name)}</strong>. ${esc(T[second].about)}${secondDeal?` <span class="deal-inline">This month: ${esc(secondDeal)}</span>`:""}</div>` : "";
@@ -266,7 +327,7 @@ function renderResult(){
     </div>
     <div class="cta">
       <a class="btn wide" href="${BOOK}" target="_blank" rel="noopener">Book my free consultation</a>
-      <p class="sub">We'll look at your skin, answer your questions and confirm the right plan. Pay-later financing is available through Medicard.</p>
+      <p class="sub">We'll look at your concerns, answer your questions and confirm the right plan. Pay-later financing is available through Medicard.</p>
     </div>
     <div class="contact">
       <div class="chip"><div><div class="lbl">Call</div><div class="val">647-997-1721</div></div><button class="copy" type="button" data-copy="647-997-1721">Copy</button></div>

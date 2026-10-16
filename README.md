@@ -22,5 +22,35 @@ At the start of each month, change `deals.json`:
 ```
 
 - `month` must be the current month (YYYY-MM). Deals from any other month are hidden automatically.
-- `treatment` must be one of: `hifu`, `thread`, `filler`, `lip`, `body`, `rf`, `laser`, `hydra`, `exo`, `lhr`.
-- A deal shows when the quiz suggests that treatment, either as the main pick or as the second option.
+- `treatment` links the deal to a treatment so it also shows on the quiz result. Leave it out for a general offer (it then shows only on the start screen).
+- All deals are listed on the quiz's start screen. A deal with a `treatment` also shows on the result screen when the quiz suggests that treatment, as the main pick or the second option.
+
+| Key | Treatment |
+|---|---|
+| `botox` | Anti-Wrinkle Injections (Botox) |
+| `filler` | Dermal Fillers |
+| `lip` | Lip Filler |
+| `hifu` | HIFU Face Lift |
+| `thread` | Thread Lift |
+| `endolift` | Endolift |
+| `rf` | RF Microneedling |
+| `micro` | Microneedling |
+| `laser` | Fractional Laser |
+| `subcision` | Subcision |
+| `pigment` | Hyperpigmentation Treatment |
+| `vascular` | Vascular Lesion Treatment |
+| `booster` | Skin Booster |
+| `salmon` | Salmon DNA (Polynucleotides) |
+| `hydra` | Hydra Facial + Contouring |
+| `fatdis` | Fat Dissolving Injections |
+| `skintag` | Skin Tag Removal |
+| `body` | Body & Butt Filler |
+| `contour` | Body Contouring |
+| `cellulite` | Cellulite Reduction |
+| `stretch` | Stretch Mark Reduction |
+| `bodyfirm` | Body Skin Firming |
+| `vaginal` | Vaginal Tightening |
+| `lhr` | Laser Hair Removal |
+| `exo` | Exosome Therapy |
+| `prp` | PRP Hair Treatment |
+| `iv` | IV Therapy |
