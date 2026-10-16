@@ -1,0 +1,292 @@
+<title>Beauty of Eve Skin Quiz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Answer 4 quick questions and get a treatment suggestion from Beauty of Eve Skincare, Midtown Toronto. Free consultations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;1,6..96,500&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow column, one question per screen, like a consultation card handed across the desk */
+:root{
+  --bg:#F5F1F4;        /* pale orchid ground */
+  --surface:#FFFFFF;
+  --ink:#2B1F2A;       /* deep plum ink */
+  --muted:#6F6270;
+  --line:#E3D9E1;
+  --accent:#8C3462;    /* berry */
+  --accent-ink:#FFFFFF;
+  --accent-soft:#F1E1EA;
+  --sage:#5E7D6C;
+  --font-display:"Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --font-body:"Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1B1419; --surface:#261C24; --ink:#F3EAF0; --muted:#B5A6B1; --line:#3A2D37;
+    --accent:#D77FAA; --accent-ink:#1B1419; --accent-soft:#3A2432; --sage:#9DBFAC;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1B1419; --surface:#261C24; --ink:#F3EAF0; --muted:#B5A6B1; --line:#3A2D37;
+  --accent:#D77FAA; --accent-ink:#1B1419; --accent-soft:#3A2432; --sage:#9DBFAC;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--font-body); font-size:16px; line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:20px 40px;
+}
+.wrap{max-width:560px; margin:0 auto; display:flex; flex-direction:column; gap:28px}
+header{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap}
+.brand{font-family:var(--font-display); font-size:1.25rem; font-weight:600; letter-spacing:.01em}
+.brand em{font-style:italic; font-weight:500; color:var(--accent)}
+.where{font-size:.8rem; color:var(--muted); letter-spacing:.06em; text-transform:uppercase}
+
+.eyebrow{font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600}
+h1,h2{font-family:var(--font-display); font-weight:500; text-wrap:balance; margin:0; line-height:1.12}
+h1{font-size:clamp(2.1rem, 8vw, 3rem)}
+h1 em,h2 em{font-style:italic; color:var(--accent)}
+h2{font-size:clamp(1.6rem, 6vw, 2.1rem)}
+p{margin:0; max-width:62ch}
+.lede{color:var(--muted); font-size:1.05rem}
+
+.intro{display:flex; flex-direction:column; gap:18px}
+.facts{display:flex; flex-wrap:wrap; gap:8px 18px; font-size:.9rem; color:var(--muted); padding:0; margin:0; list-style:none}
+.facts li::before{content:"◆ "; color:var(--accent); font-size:.7em; vertical-align:.15em}
+
+.btn{
+  appearance:none; border:0; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font:600 1rem/1 var(--font-body); padding:16px 26px; border-radius:999px;
+  background:var(--accent); color:var(--accent-ink); transition:transform .15s ease, filter .15s ease;
+}
+.btn:hover{filter:brightness(1.07)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible,.opt:focus-visible,.link:focus-visible,.copy:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
+.btn.wide{width:100%}
+.link{background:none; border:0; color:var(--muted); font:500 .95rem var(--font-body); cursor:pointer; text-decoration:underline; text-underline-offset:3px; padding:6px 0}
+
+.progress{display:flex; flex-direction:column; gap:8px}
+.progress-row{display:flex; justify-content:space-between; font-size:.85rem; color:var(--muted); font-variant-numeric:tabular-nums}
+.bar{height:4px; background:var(--line); border-radius:4px; overflow:hidden}
+.bar span{display:block; height:100%; background:var(--accent); transition:width .35s ease}
+
+.question{display:flex; flex-direction:column; gap:20px}
+.hint{color:var(--muted); font-size:.95rem}
+.opts{display:flex; flex-direction:column; gap:10px}
+.opt{
+  appearance:none; text-align:left; cursor:pointer; width:100%;
+  background:var(--surface); color:var(--ink); border:1.5px solid var(--line); border-radius:14px;
+  padding:16px 18px; font:500 1rem/1.35 var(--font-body);
+  display:flex; flex-direction:column; gap:3px; transition:border-color .15s ease, background .15s ease;
+}
+.opt small{font-weight:400; color:var(--muted); font-size:.88rem}
+.opt:hover{border-color:var(--accent)}
+.opt[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-soft)}
+.nav{display:flex; justify-content:space-between; align-items:center}
+
+.result{display:flex; flex-direction:column; gap:22px}
+.pick{background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:24px 22px; display:flex; flex-direction:column; gap:14px}
+.pick h3{font-family:var(--font-display); font-weight:500; font-size:1.9rem; margin:0; line-height:1.1}
+.why{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px}
+.why li{padding-left:22px; position:relative}
+.why li::before{content:""; position:absolute; left:2px; top:.55em; width:10px; height:10px; border-radius:50%; background:var(--sage)}
+.also{border-top:1px solid var(--line); padding-top:14px; font-size:.95rem; color:var(--muted)}
+.also strong{color:var(--ink); font-weight:600}
+.deal{background:var(--accent-soft); border-radius:12px; padding:12px 14px; font-weight:600; display:flex; flex-direction:column; gap:2px}
+.deal .lbl{font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:600}
+.deal-inline{display:block; margin-top:4px; color:var(--accent); font-weight:600}
+.cta{display:flex; flex-direction:column; gap:12px}
+.cta .sub{font-size:.9rem; color:var(--muted); text-align:center}
+.contact{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+@media (max-width:420px){.contact{grid-template-columns:1fr}}
+.chip{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; gap:10px; min-width:0}
+.chip div{min-width:0}
+.chip .lbl{font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.chip .val{font-weight:600; font-variant-numeric:tabular-nums; user-select:all}
+.copy{background:none; border:1px solid var(--line); color:var(--ink); border-radius:8px; padding:6px 10px; font:500 .8rem var(--font-body); cursor:pointer; flex-shrink:0}
+.fine{font-size:.8rem; color:var(--muted); line-height:1.5}
+footer{font-size:.82rem; color:var(--muted); border-top:1px solid var(--line); padding-top:16px; display:flex; flex-direction:column; gap:4px}
+
+.screen{animation:rise .35s ease both}
+@keyframes rise{from{opacity:.4; transform:translateY(8px)}to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:reduce){.screen{animation:none}.bar span{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">Beauty of <em>Eve</em> Skincare</div>
+    <div class="where">Midtown Toronto</div>
+  </header>
+
+  <main id="app" aria-live="polite">
+    <section class="screen intro" id="intro">
+      <div class="eyebrow">1-minute skin quiz</div>
+      <h1>Find the treatment that fits your <em>skin goals</em></h1>
+      <p class="lede">Answer four quick questions about what you'd like to change. We'll suggest the treatment that suits you best, then you can book a free consultation to talk it through with our team.</p>
+      <ul class="facts">
+        <li>4 questions</li>
+        <li>No sign-up</li>
+        <li>Free consultation</li>
+      </ul>
+      <div><button class="btn" id="start" type="button">Start the quiz</button></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>20 Eglinton Avenue East, Unit 403, Toronto</span>
+    <span>Open 9 AM – 7 PM daily, by appointment</span>
+  </footer>
+</div>
+
+<script>
+const BOOK = "https://api.leadconnectorhq.com/booking/czGzkv8ishgckZ1E3NQI/bp/OeCEj3SpPd3R7EbvkFXk";
+
+const T = {
+  hifu:   {name:"HIFU Face & Neck Lift", about:"A non-surgical treatment that tightens skin by stimulating your own collagen, for a gradual lift through the face, jaw and neck."},
+  thread: {name:"Thread Lift", about:"A visible lift without surgery. Dissolvable threads lift and define the cheeks and jawline with minimal downtime."},
+  filler: {name:"Dermal Fillers", about:"Juvéderm or Radiesse Plus restore lost volume and soften lines, for a refreshed look that still looks like you."},
+  lip:    {name:"Lip Filler", about:"Subtle, natural-looking volume and shape for lips that feel balanced with the rest of your face."},
+  body:   {name:"Body & Butt Filler", about:"Non-surgical volume to refine body contour, shape and proportions."},
+  rf:     {name:"RF Microneedling", about:"Microneedling with radiofrequency energy for smoother, firmer, healthier-looking skin and refined texture."},
+  laser:  {name:"Fractional Laser", about:"Resurfaces the skin and boosts collagen to improve pigmentation, uneven tone, acne scars and texture."},
+  hydra:  {name:"Hydra Facial + Contouring", about:"A deep-cleansing, hydrating facial that brings back glow, with contouring for a lifted, fresh finish."},
+  exo:    {name:"Exosome Therapy", about:"Supports scalp health and hair follicles for people noticing thinning or shedding hair."},
+  lhr:    {name:"Laser Hair Removal", about:"Long-term reduction of unwanted hair, with sessions planned around your skin and hair type."}
+};
+
+const Q = [
+  {id:"concern", q:"What would you most like to change?", hint:"Pick the one that matters most right now.", opts:[
+    {t:"Sagging or loose skin", s:"Face, jawline or neck", pool:["hifu","thread","rf"], pts:{hifu:3,thread:3,rf:1}, why:"You want firmer, lifted skin"},
+    {t:"Lost volume, hollows or lines", s:"Cheeks, under-eyes, smile lines", pool:["filler","hifu","thread"], pts:{filler:4,hifu:1,thread:1}, why:"You want to restore volume and soften lines"},
+    {t:"Fuller or more defined lips", s:"", pool:["lip","filler"], pts:{lip:5}, why:"You want more lip volume or shape"},
+    {t:"Acne scars, dark spots or uneven texture", s:"", pool:["laser","rf","hydra"], pts:{laser:3,rf:3}, why:"You want smoother, more even-toned skin"},
+    {t:"Dull or tired-looking skin", s:"", pool:["hydra","rf","laser"], pts:{hydra:4,rf:1}, why:"You want your glow back"},
+    {t:"Body or buttock shape", s:"", pool:["body"], pts:{body:5}, why:"You want to refine your body contour"},
+    {t:"Thinning hair", s:"", pool:["exo"], pts:{exo:5}, why:"You want to support thinning hair"},
+    {t:"Unwanted body or facial hair", s:"", pool:["lhr"], pts:{lhr:5}, why:"You want long-term hair reduction"}
+  ]},
+  {id:"change", q:"How much of a change are you looking for?", hint:"There's no wrong answer. Your consultation will fine-tune this.", opts:[
+    {t:"Subtle and natural", s:"People notice you look rested, not 'done'", pts:{hydra:2,hifu:2,lip:1,rf:1}, why:"You prefer a subtle, natural result"},
+    {t:"A clear, noticeable difference", s:"", pts:{filler:2,rf:2,laser:2,lip:1,body:1}, why:"You want a clear, visible difference"},
+    {t:"The most lift or change possible without surgery", s:"", pts:{thread:3,filler:2,body:2,laser:1}, why:"You want the strongest non-surgical result"}
+  ]},
+  {id:"downtime", q:"How much downtime can you plan for?", hint:"Downtime is time with redness or swelling before you're fully back to normal.", opts:[
+    {t:"None, I need to look normal right away", s:"", pts:{hydra:3,hifu:2,lhr:1,exo:1}, why:"You need little to no downtime"},
+    {t:"A day or two is fine", s:"", pts:{filler:2,lip:2,rf:2,thread:1,body:1}, why:"A day or two of downtime works for you"},
+    {t:"A few days is fine for better results", s:"", pts:{laser:3,rf:2,thread:2}, why:"You're open to a few days of downtime for stronger results"}
+  ]},
+  {id:"priority", q:"What matters most to you?", hint:"", opts:[
+    {t:"Results I can see quickly", s:"", pts:{filler:2,lip:2,body:2,hydra:1,thread:1}, why:"You'd like to see results quickly"},
+    {t:"Results that build and last", s:"", pts:{hifu:2,rf:2,laser:2,thread:1,lhr:1,exo:1}, why:"You'd like results that build and last"},
+    {t:"Keeping it gentle and comfortable", s:"", pts:{hydra:3,hifu:1,exo:1}, why:"Comfort matters to you"}
+  ]}
+];
+
+let DEALS = {headline:"", deals:[]};
+(function loadDeals(){
+  const now = new Date();
+  const ym = now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
+  fetch("deals.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{
+    if(d && d.month===ym && Array.isArray(d.deals)) DEALS = {headline:d.headline||"", deals:d.deals.filter(x=>x && T[x.treatment] && x.text)};
+  }).catch(()=>{});
+})();
+function dealFor(k){ const d = DEALS.deals.find(x=>x.treatment===k); return d ? d.text : ""; }
+
+const app = document.getElementById("app");
+let step = 0;
+const answers = [];
+
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+function renderQuestion(){
+  const item = Q[step];
+  const pct = Math.round((step)/Q.length*100);
+  app.innerHTML = `
+  <section class="screen question">
+    <div class="progress">
+      <div class="progress-row"><span>Question ${step+1} of ${Q.length}</span><span>${pct}%</span></div>
+      <div class="bar"><span style="width:${pct}%"></span></div>
+    </div>
+    <h2>${esc(item.q)}</h2>
+    ${item.hint?`<p class="hint">${esc(item.hint)}</p>`:""}
+    <div class="opts" role="group" aria-label="${esc(item.q)}">
+      ${item.opts.map((o,i)=>`<button type="button" class="opt" id="opt-${item.id}-${i}" data-i="${i}" aria-pressed="${answers[step]===i}">${esc(o.t)}${o.s?`<small>${esc(o.s)}</small>`:""}</button>`).join("")}
+    </div>
+    <div class="nav">${step>0?`<button class="link" type="button" id="back">← Back</button>`:`<span></span>`}<span></span></div>
+  </section>`;
+  app.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    answers[step] = +b.dataset.i;
+    b.setAttribute("aria-pressed","true");
+    setTimeout(()=>{ step++; step<Q.length?renderQuestion():renderResult(); window.scrollTo({top:0,behavior:"smooth"}); },160);
+  }));
+  const back = document.getElementById("back");
+  if(back) back.addEventListener("click",()=>{step--; renderQuestion();});
+  const first = app.querySelector(".opt"); if(first && step>0) first.focus({preventScroll:true});
+}
+
+function score(){
+  const concern = Q[0].opts[answers[0]];
+  const s = {};
+  concern.pool.forEach(k=>s[k]=0);
+  Q.forEach((item,qi)=>{
+    const pts = item.opts[answers[qi]].pts;
+    for(const k in pts) if(k in s) s[k]+=pts[k];
+  });
+  const ranked = Object.keys(s).sort((a,b)=>s[b]-s[a] || concern.pool.indexOf(a)-concern.pool.indexOf(b));
+  const pairing = {body:"hydra", exo:"hydra", lhr:"hydra", lip:"filler"};
+  let second = ranked[1] || pairing[ranked[0]];
+  return {top:ranked[0], second};
+}
+
+function renderResult(){
+  const {top, second} = score();
+  const t = T[top];
+  const reasons = Q.map((item,qi)=>item.opts[answers[qi]].why);
+  const secondDeal = second ? dealFor(second) : "";
+  const secondLine = second && second!==top
+    ? `<div class="also">Also worth asking about: <strong>${esc(T[second].name)}</strong>. ${esc(T[second].about)}${secondDeal?` <span class="deal-inline">This month: ${esc(secondDeal)}</span>`:""}</div>` : "";
+  const topDeal = dealFor(top);
+  const dealBox = topDeal ? `<div class="deal"><div class="lbl">${esc(DEALS.headline || "This month's deal")}</div><div>${esc(topDeal)}</div></div>` : "";
+  app.innerHTML = `
+  <section class="screen result">
+    <div class="progress">
+      <div class="progress-row"><span>Your result</span><span>100%</span></div>
+      <div class="bar"><span style="width:100%"></span></div>
+    </div>
+    <div class="eyebrow">Your suggested treatment</div>
+    <div class="pick">
+      <h3>${esc(t.name)}</h3>
+      <p>${esc(t.about)}</p>
+      ${dealBox}
+      <ul class="why">${reasons.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>
+      ${secondLine}
+    </div>
+    <div class="cta">
+      <a class="btn wide" href="${BOOK}" target="_blank" rel="noopener">Book my free consultation</a>
+      <p class="sub">We'll look at your skin, answer your questions and confirm the right plan. Pay-later financing is available through Medicard.</p>
+    </div>
+    <div class="contact">
+      <div class="chip"><div><div class="lbl">Call</div><div class="val">647-997-1721</div></div><button class="copy" type="button" data-copy="647-997-1721">Copy</button></div>
+      <div class="chip"><div><div class="lbl">WhatsApp</div><div class="val">236-242-1721</div></div><button class="copy" type="button" data-copy="236-242-1721">Copy</button></div>
+    </div>
+    <p class="fine">This quiz gives a general suggestion, not a medical assessment. Your provider will confirm whether a treatment is right for you at your consultation.</p>
+    <div><button class="link" type="button" id="again">Retake the quiz</button></div>
+  </section>`;
+  document.getElementById("again").addEventListener("click",()=>{step=0; answers.length=0; renderQuestion();});
+  app.querySelectorAll(".copy").forEach(b=>b.addEventListener("click",()=>{
+    const v=b.dataset.copy;
+    const done=()=>{b.textContent="Copied"; setTimeout(()=>b.textContent="Copy",1500);};
+    try{ navigator.clipboard.writeText(v).then(done).catch(()=>sel(b)); }catch(e){ sel(b); }
+  }));
+}
+function sel(b){
+  const el=b.previousElementSibling.querySelector(".val");
+  const r=document.createRange(); r.selectNodeContents(el);
+  const s=window.getSelection(); s.removeAllRanges(); s.addRange(r);
+}
+
+document.getElementById("start").addEventListener("click",()=>{step=0; renderQuestion();});
+</script>
