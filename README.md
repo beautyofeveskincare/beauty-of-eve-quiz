@@ -15,8 +15,8 @@ At the start of each month, change `deals.json`:
   "month": "2026-11",
   "headline": "November Glow-Up",
   "deals": [
-    { "treatment": "filler", "text": "Juvéderm $549 per syringe (reg. $699)" },
-    { "treatment": "hydra",  "text": "Hydra Facial + Contouring $149" }
+    { "group": "Injectables & Thread Lift", "treatment": "filler", "text": "Juvéderm $549 per syringe (reg. $699)" },
+    { "group": "Skin & RF Treatments", "text": "Medical Facial $119 (reg. $142.80)" }
   ]
 }
 ```

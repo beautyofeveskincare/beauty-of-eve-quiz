@@ -1,5 +1,34 @@
 {
   "month": "2026-10",
-  "headline": "",
-  "deals": []
+  "headline": "October Monthly Deals",
+  "deals": [
+    { "group": "Injectables & Thread Lift", "treatment": "botox",     "text": "Botox $7.99 per unit (reg. $9.59)" },
+    { "group": "Injectables & Thread Lift", "treatment": "lip",       "text": "Mini Lip Filler (half syringe) $199 (reg. $238.80)" },
+    { "group": "Injectables & Thread Lift", "treatment": "filler",    "text": "Stylage Filler $369 per syringe (reg. $442.80)" },
+    { "group": "Injectables & Thread Lift", "treatment": "filler",    "text": "Juvéderm Filler $599 per syringe (reg. $718.80)" },
+    { "group": "Injectables & Thread Lift", "treatment": "filler",    "text": "Radiesse Plus $569 per syringe (reg. $682.80)" },
+    { "group": "Injectables & Thread Lift", "treatment": "filler",    "text": "Sculptra Filler $549 per vial (reg. $658.80)" },
+    { "group": "Injectables & Thread Lift", "treatment": "body",      "text": "Body Filler $13.49 per ml (reg. $16.19)" },
+    { "group": "Injectables & Thread Lift", "treatment": "thread",    "text": "Thread Lift $149 per thread (reg. $178.80)" },
+    { "group": "Injectables & Thread Lift",                           "text": "Nose Thread $179 per thread (reg. $214.80)" },
+    { "group": "Injectables & Thread Lift",                           "text": "Eyebrow Thread $189 per thread (reg. $226.80)" },
+    { "group": "Injectables & Thread Lift", "treatment": "endolift",  "text": "Endolift Full Face $3,599 (reg. $4,318.80)" },
+    { "group": "Injectables & Thread Lift", "treatment": "salmon",    "text": "Salmon DNA $499 (reg. $598.80)" },
+    { "group": "Injectables & Thread Lift", "treatment": "fatdis",    "text": "Fat Dissolving $99 per ml (reg. $118.80)" },
+    { "group": "Injectables & Thread Lift", "treatment": "subcision", "text": "Subcision + PRP $649 (reg. $778.80)" },
+    { "group": "Skin & RF Treatments",                                "text": "Medical Facial $119 (reg. $142.80)" },
+    { "group": "Skin & RF Treatments",      "treatment": "laser",     "text": "Fractional Treatments $249 (reg. $298.80)" },
+    { "group": "Skin & RF Treatments",      "treatment": "rf",        "text": "RF Microneedling $299 (reg. $358.80)" },
+    { "group": "Skin & RF Treatments",                                "text": "RF Skin Tightening $419 (reg. $502.80)" },
+    { "group": "Skin & RF Treatments",                                "text": "RF Fractional $279 (reg. $334.80)" },
+    { "group": "Skin & RF Treatments",      "treatment": "hifu",      "text": "HIFU Full Face + Neck $279 (reg. $334.80)" },
+    { "group": "PRP, Hair & Wellness",      "treatment": "prp",       "text": "PRP $249 (reg. $298.80)" },
+    { "group": "PRP, Hair & Wellness",      "treatment": "prp",       "text": "PRP-Exosome $499 (reg. $598.80)" },
+    { "group": "PRP, Hair & Wellness",      "treatment": "exo",       "text": "Exosome Therapy $249 (reg. $298.80)" },
+    { "group": "PRP, Hair & Wellness",                                "text": "PRP Cellarich (new) $599 (reg. $718.80)" },
+    { "group": "PRP, Hair & Wellness",                                "text": "Knee PRP $599 (reg. $718.80), or 3 sessions for $1,299" },
+    { "group": "PRP, Hair & Wellness",                                "text": "Hair Filler $389 (reg. $466.80)" },
+    { "group": "PRP, Hair & Wellness",      "treatment": "iv",        "text": "IV Therapy $249 (reg. $298.80)" },
+    { "group": "PRP, Hair & Wellness",                                "text": "Mesotherapy $279 (reg. $334.80)" }
+  ]
 }

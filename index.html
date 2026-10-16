@@ -100,7 +100,12 @@ p{margin:0; max-width:62ch}
 .deal-inline{display:block; margin-top:4px; color:var(--accent); font-weight:600}
 .intro-deals{border:1px solid var(--line); background:var(--surface); border-radius:14px; padding:14px 16px; display:flex; flex-direction:column; gap:6px}
 .intro-deals .lbl{font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:600}
-.intro-deals ul{margin:0; padding-left:18px; display:flex; flex-direction:column; gap:4px}
+.intro-deals ul{margin:0; padding-left:18px; display:flex; flex-direction:column; gap:3px; font-size:.92rem}
+.deals-note{font-size:.95rem}
+.intro-deals summary{cursor:pointer; color:var(--accent); font-weight:600; padding:4px 0}
+.intro-deals summary:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
+.deal-group{display:flex; flex-direction:column; gap:4px; margin-top:10px}
+.deal-group-name{font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600}
 .cta{display:flex; flex-direction:column; gap:12px}
 .cta .sub{font-size:.9rem; color:var(--muted); text-align:center}
 .contact{display:grid; grid-template-columns:1fr 1fr; gap:10px}
@@ -244,11 +249,17 @@ let DEALS = {headline:"", deals:[]};
     }
   }).catch(()=>{});
 })();
-function dealFor(k){ const d = DEALS.deals.find(x=>x.treatment===k); return d ? d.text : ""; }
+function dealsFor(k){ return DEALS.deals.filter(x=>x.treatment===k).map(x=>x.text); }
 function showIntroDeals(){
   const box = document.getElementById("intro-deals");
   if(!box || !DEALS.deals.length) return;
-  box.innerHTML = `<div class="lbl">${esc(DEALS.headline || "This month's deals")}</div><ul>${DEALS.deals.map(d=>`<li>${d.treatment?`<strong>${esc(T[d.treatment].name)}</strong> · `:""}${esc(d.text)}</li>`).join("")}</ul>`;
+  const groups = [];
+  DEALS.deals.forEach(d=>{ const g = d.group || "Deals"; let e = groups.find(x=>x.g===g); if(!e){ e={g, items:[]}; groups.push(e); } e.items.push(d.text); });
+  box.innerHTML = `<div class="lbl">${esc(DEALS.headline || "This month's deals")}</div>
+    <p class="deals-note">Special prices on ${DEALS.deals.length} treatments this month, including your quiz result.</p>
+    <details id="all-deals"><summary>See all ${DEALS.deals.length} deals</summary>
+    ${groups.map(e=>`<div class="deal-group"><div class="deal-group-name">${esc(e.g)}</div><ul>${e.items.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>`).join("")}
+    </details>`;
   box.hidden = false;
 }
 
@@ -306,11 +317,11 @@ function renderResult(){
   const {concern, top, second} = score();
   const t = T[top];
   const reasons = [concern.why, ...LATER.map((item,li)=>item.opts[answers[li+2]].why)];
-  const secondDeal = second ? dealFor(second) : "";
+  const secondDeal = second ? dealsFor(second).join(" · ") : "";
   const secondLine = second && second!==top
     ? `<div class="also">Also worth asking about: <strong>${esc(T[second].name)}</strong>. ${esc(T[second].about)}${secondDeal?` <span class="deal-inline">This month: ${esc(secondDeal)}</span>`:""}</div>` : "";
-  const topDeal = dealFor(top);
-  const dealBox = topDeal ? `<div class="deal"><div class="lbl">${esc(DEALS.headline || "This month's deal")}</div><div>${esc(topDeal)}</div></div>` : "";
+  const topDeals = dealsFor(top);
+  const dealBox = topDeals.length ? `<div class="deal"><div class="lbl">${esc(DEALS.headline || "This month's deal")}</div>${topDeals.map(t=>`<div>${esc(t)}</div>`).join("")}</div>` : "";
   app.innerHTML = `
   <section class="screen result">
     <div class="progress">
